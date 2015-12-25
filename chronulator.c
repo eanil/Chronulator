@@ -18,7 +18,13 @@
  P1.3, P1.6, P1.7 (pins 5,8,9) --> not used
 
  compiled using IAR Embedded Workbench
-**********************************************/
+**********************************************
+
+modified by Engin Anil to work on MSP430G2452 and compile using mspgcc
+12.24.2015
+
+*/
+
 
 //#include  "msp430.h"
 
@@ -78,7 +84,7 @@ main(void)
   P1DIR =  BIT1 + BIT2;                            // P1.1 (min) and P1.2 (hr) to output direction
  
   //###### don't forget to comment out
-  P1DIR =  BIT0 + BIT1 + BIT2;                  // P1.0 (flash led when using Launchpad), 
+  //P1DIR =  BIT0 + BIT1 + BIT2;                  // P1.0 (flash led when using Launchpad), 
                                                    // P1.5 (min) and P1.6 (hr) to output direction
    
   P1IE = BIT4 + BIT5;                              // Enable Port 1 interrupt for P1.4 and P1.5
@@ -137,7 +143,7 @@ watchdow_timer(void)
   if (debounceFlg == 0)
   {
       //#######comment out
-     P1OUT ^= BIT0;                     // Toggle P1.0 using exclusive-OR (Use when monitoring ACLK)
+     //P1OUT ^= BIT0;                     // Toggle P1.0 using exclusive-OR (Use when monitoring ACLK)
     
     if (cntr == cntr_trip_pt)          // change pwm duty cycle
     {
@@ -166,11 +172,13 @@ port_1(void)
   case BIT4:                           // P1.4 (increment mins)
     cntr = 0;                          // set seconds to 0
 //#####comment out
+    /*
     int j = 1;
     for (j = 1; j <= 4; j++)      // inc 4 mins  Uncomment these 4 lines when tuning m_cal            
     {
       one_min();
-    }  
+    } 
+    */
     one_min();                         // increment 1 min
     debounce(BIT4);
     break;

@@ -92,10 +92,12 @@ main(void)
   _BIS_SR(LPM0_bits + GIE);                        // Enter LPM0 w/interrupt
   return 0;
 }
-// TimerA CCR0 interrupt service routine
-#pragma vector=TIMERA0_VECTOR
-__interrupt void timer_A0(void)
+
+static void
+__attribute__((__interrupt__(TIMER0_A0_VECTOR)))
+timer_A0(void)
 {
+  
   if (mflg == 0)
   {
     TACCR0 = TAR + m_on;
@@ -107,10 +109,12 @@ __interrupt void timer_A0(void)
     mflg = 0;
   }
 }
-// TimerA CCR1 interrupt service routine
-#pragma vector=TIMERA1_VECTOR
-__interrupt void timer_A1(void)
+
+static void
+__attribute__((__interrupt__(TIMER0_A1_VECTOR)))
+timer_A1(void)
 {
+
   if (hflg == 0)
   {
     TACCTL1 = OUTMOD_5 + CCIE;                     // output mode = reset, interrupt enabled
@@ -124,12 +128,12 @@ __interrupt void timer_A1(void)
     hflg = 0;
   }
 }
-// Watchdog Timer interrupt service routine
-// interrupt occurs on both leading and falling edge
-#pragma vector=WDT_VECTOR
-__interrupt void watchdog_timer(void)
+
+static void
+__attribute__((__interrupt__(WDT_VECTOR)))
+watchdow_timer(void)
 {
- 
+
   if (debounceFlg == 0)
   {
       //#######comment out
@@ -151,16 +155,19 @@ __interrupt void watchdog_timer(void)
     debounceFlg = 0;
   }
 }
-// Port 1 interrupt service routine
-#pragma vector=PORT1_VECTOR
-__interrupt void port_1 (void)
+
+static void
+__attribute__((__interrupt__(PORT1_VECTOR)))
+port_1(void)
 {
+
    P1IFG &= ~BIT0;                      // clear any interrupt on P1.0 (only needed if using Launchpad led)
   switch (P1IFG) {
   case BIT4:                           // P1.4 (increment mins)
     cntr = 0;                          // set seconds to 0
 //#####comment out
-    for (int j = 1; j <= 4; j++)      // inc 4 mins  Uncomment these 4 lines when tuning m_cal            
+    int j = 1;
+    for (j = 1; j <= 4; j++)      // inc 4 mins  Uncomment these 4 lines when tuning m_cal            
     {
       one_min();
     }  
@@ -170,7 +177,8 @@ __interrupt void port_1 (void)
 
   case BIT5:                           // P1.5 (increment hrs)
     // cntr = 0;                       // set seconds to 0
-    for (int j = 1; j <= 60; j++)      // inc 1 hr                
+    j = 1;
+    for (j = 1; j <= 60; j++)      // inc 1 hr                
     {
       one_min();
     }  
